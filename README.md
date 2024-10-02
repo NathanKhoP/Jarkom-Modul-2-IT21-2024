@@ -175,13 +175,9 @@ apt-get install php -y
 
 **Clients**
 
-```
-sek nanti
-sek nanti
-sek nanti
-sek nanti
-sek nanti
-sek nanti
+```bash
+echo 'nameserver 192.168.122.1
+nameserver 10.74.2.5' > /etc/resolv.conf
 ```
 
 ## Soal
@@ -205,11 +201,11 @@ Sriwijaya - `sudarsana.sh`
 ```bash
 echo 'zone "sudarsana.it21.com" {
 	type master;
-	file "/etc/bind/sudarsana/sudarsana.it21.com";
-	};' >> /etc/bind/named.conf.local
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};' >> /etc/bind/named.conf.local
 
-mkdir /etc/bind/sudarsana
-cp /etc/bind/db.local /etc/bind/sudarsana/sudarsana.it21.com
+mkdir /etc/bind/jarkom
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
 service bind9 restart
 
 echo ';
@@ -225,25 +221,25 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www		IN		CNAME	sudarsana.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/sudarsana/sudarsana.it21.com
+www	IN		CNAME	sudarsana.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/jarkom/sudarsana.it21.com
 ```
 
 ### No 3
 
 Para pasukan juga perlu mengetahui mana titik yang akan diserang, sehingga dibutuhkan domain lain yaitu pasopati.xxxx.com dengan alias www.pasopati.xxxx.com yang mengarah ke Kotalingga.
 
+**Pengerjaan**
+
 Sriwijaya - `pasopati.sh`
 
 ```bash
 echo 'zone "pasopati.it21.com" {
- 	type master; >> /etc/bind/named.conf.local
- 	file "/etc/bind/pasopati/pasopati.it21.com"; 
+ 	type master;
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
 };' >> /etc/bind/named.conf.local
 
-mkdir /etc/bind/pasopati
-
-cp /etc/bind/db.local /etc/bind/pasopati/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
 
 service bind9 restart
 
@@ -261,26 +257,24 @@ $TTL    604800
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
 www		IN		CNAME	pasopati.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/pasopati/pasopati.it21.com
+@       IN      AAAA    ::1' >  /etc/bind/jarkom/pasopati.it21.com
 ```
-
-**Pengerjaan**
 
 ### No 4
 
 Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi dan suplai meme terbaru tersebut mengarah ke Tanjungkulai dan domain yang ingin digunakan adalah rujapala.xxxx.com dengan alias www.rujapala.xxxx.com.
 
+**Pengerjaan**
+
 Sriwijaya - `rujapala.sh`
 
 ```bash
 echo 'zone "rujapala.it21.com" {
- 	type master; >> /etc/bind/named.conf.local
- 	file "/etc/bind/rujapala/rujapala.it21.com"; 
+ 	type master;
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
 };' >> /etc/bind/named.conf.local
 
-mkdir /etc/bind/rujapala
-
-cp /etc/bind/db.local /etc/bind/rujapala/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
 
 service bind9 restart
 
@@ -298,14 +292,96 @@ $TTL    604800
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
 www		IN		CNAME	rujapala.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/rujapala/rujapala.it21.com
+@       IN      AAAA    ::1' >  /etc/bind/jarkom/rujapala.it21.com
 ```
 
-**Pengerjaan**
+**Shell script gabungan sudarsana, pasopati, dan rujapala - `234.sh`**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type master;
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type master;
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type master;
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};' > /etc/bind/named.conf.local
+
+mkdir /etc/bind/jarkom
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+service bind9 restart
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+www	IN		CNAME	sudarsana.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www		IN		CNAME	pasopati.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www		IN		CNAME	rujapala.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/jarkom/rujapala.it21.com
+```
 
 ### No 5
 
 Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Nusantara.
+
+Bisa dilakukan cek di setiap client menggunakan command-command berikut:
+
+```bash
+ping sudarsana.it21.com -c 1
+ping www.sudarsana.it21.com -c 1
+ping pasopati.it21.com -c 1
+ping www.pasopati.it21.com -c 1
+ping rujapala.it21.com -c 1
+ping www.rujapala.it21.com -c 1
+```
 
 **Pengerjaan**
 
