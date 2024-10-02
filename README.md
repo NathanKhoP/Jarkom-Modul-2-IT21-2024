@@ -294,7 +294,7 @@ www		IN		CNAME	rujapala.it21.com.
 @       IN      AAAA    ::1' >  /etc/bind/jarkom/rujapala.it21.com
 ```
 
-**Shell script gabungan sudarsana, pasopati, dan rujapala - `234.sh`**
+**Shell script - `master.sh`**
 
 ```bash
 echo 'zone "sudarsana.it21.com" {
@@ -391,9 +391,128 @@ Tes di Mulawarman - **Berhasil**
 
 Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain pasopati.xxxx.com melalui alamat IP Kotalingga (Notes: menggunakan pointer record).
 
-
-
 **Pengerjaan**
+
+```bash
+echo 'zone "2.74.10.in-addr.arpa" [
+type master;
+file "/etc/bind/jarkom/2.74.10.in-addr.arpa";
+};' >> /etc/bind/named.conf.local
+
+cp /etc/bind/db.local /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo ';
+; BIND data file for reverse DNS lookup
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      pasopati.it21.com.
+4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+service bind9 restart
+```
+
+**Shell script - `master.sh`**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type master;
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type master;
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type master;
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "2.74.10.in-addr.arpa" {
+	type master;
+	file "/etc/bind/jarkom/2.74.10.in-addr.arpa";
+};' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for reverse DNS lookup
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      pasopati.it21.com.
+4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+service bind9 restart
+```
+
+Tes di Mulawarman - **Berhasil**
+
+![alt text](assets/no6.png)
 
 ### No 7
 
