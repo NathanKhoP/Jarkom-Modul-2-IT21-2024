@@ -176,8 +176,7 @@ apt-get install php -y
 **Clients**
 
 ```bash
-echo 'nameserver 192.168.122.1
-nameserver 10.74.2.5' > /etc/resolv.conf
+echo 'nameserver 10.74.2.5' > /etc/resolv.conf
 ```
 
 ## Soal
@@ -317,11 +316,11 @@ mkdir /etc/bind/jarkom
 cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
 cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
 cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
-service bind9 restart
 
 echo ';
 ; BIND data file for local loopback interface
 ;
+
 $TTL    604800
 @       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
                               2         ; Serial
@@ -332,8 +331,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/jarkom/sudarsana.it21.com
+www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -348,8 +346,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www		IN		CNAME	pasopati.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/jarkom/pasopati.it21.com
+www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -361,11 +358,12 @@ $TTL    604800
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
-;
+;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www		IN		CNAME	rujapala.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/jarkom/rujapala.it21.com
+www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+service bind9 restart
 ```
 
 ### No 5
@@ -383,11 +381,17 @@ ping rujapala.it21.com -c 1
 ping www.rujapala.it21.com -c 1
 ```
 
+Tes di Mulawarman - **Berhasil**
+
+![alt text](assets/no5.png)
+
 **Pengerjaan**
 
 ### No 6
 
 Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain pasopati.xxxx.com melalui alamat IP Kotalingga (Notes: menggunakan pointer record).
+
+
 
 **Pengerjaan**
 
