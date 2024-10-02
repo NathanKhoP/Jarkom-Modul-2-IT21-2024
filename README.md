@@ -176,7 +176,8 @@ apt-get install php -y
 **Clients**
 
 ```bash
-echo 'nameserver 10.74.2.5' > /etc/resolv.conf
+echo 'nameserver 10.74.2.5
+nameserver 10.74.1.2' > /etc/resolv.conf
 ```
 
 ## Soal
@@ -699,6 +700,7 @@ Kamu juga diperintahkan untuk membuat subdomain khusus melacak kekuatan tersembu
 Tambahkan Subdomain cakra yang mengarah ke Node Bendahulu
 
 **Shell script - `master.sh`**
+
 ```bash
 echo 'zone "sudarsana.it21.com" {
 	type master;
@@ -750,12 +752,6 @@ $TTL    604800
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
 cakra   IN      A       10.74.2.7   ; IP Bedahulu
-
-
-
-
-
-
 www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
