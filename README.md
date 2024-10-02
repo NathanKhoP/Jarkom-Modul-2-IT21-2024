@@ -226,18 +226,80 @@ $TTL    604800
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
 www		IN		CNAME	sudarsana.it21.com.
-@       IN      AAAA    ::1' >  /etc/bind/sudarsana/sudarsana.it26.com
+@       IN      AAAA    ::1' >  /etc/bind/sudarsana/sudarsana.it21.com
 ```
 
 ### No 3
 
 Untuk memastikan keamanan dan keandalan sistem, buatlah backup DNS server di Bedahulu yang akan berfungsi sebagai secondary DNS server. DNS server ini harus selalu sinkron dengan DNS Master di Sriwijaya.
 
+Sriwijaya - `pasopati.sh`
+
+```bash
+echo 'zone "pasopati.it21.com" {
+ 	type master; >> /etc/bind/named.conf.local
+ 	file "/etc/bind/pasopati/pasopati.it21.com"; 
+};' >> /etc/bind/named.conf.local
+
+mkdir /etc/bind/pasopati
+
+cp /etc/bind/db.local /etc/bind/pasopati/pasopati.it21.com
+
+service bind9 restart
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www		IN		CNAME	pasopati.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/pasopati/pasopati.it21.com
+```
+
 **Pengerjaan**
 
 ### No 4
 
 Buatlah subdomain baru untuk keperluan komunikasi rahasia antara pasukan dengan nama rahasia.sudarsana.xxxx.com yang mengarah ke Bedahulu. Pastikan subdomain ini hanya dapat diakses oleh IP tertentu yang telah ditentukan oleh markas pusat.
+
+Sriwijaya - `rujapala.sh`
+
+```bash
+echo 'zone "rujapala.it21.com" {
+ 	type master; >> /etc/bind/named.conf.local
+ 	file "/etc/bind/rujapala/rujapala.it21.com"; 
+};' >> /etc/bind/named.conf.local
+
+mkdir /etc/bind/rujapala
+
+cp /etc/bind/db.local /etc/bind/rujapala/rujapala.it21.com
+
+service bind9 restart
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www		IN		CNAME	rujapala.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/rujapala/rujapala.it21.com
+```
 
 **Pengerjaan**
 
