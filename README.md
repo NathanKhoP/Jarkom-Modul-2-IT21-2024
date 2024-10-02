@@ -231,7 +231,7 @@ www		IN		CNAME	sudarsana.it21.com.
 
 ### No 3
 
-Untuk memastikan keamanan dan keandalan sistem, buatlah backup DNS server di Bedahulu yang akan berfungsi sebagai secondary DNS server. DNS server ini harus selalu sinkron dengan DNS Master di Sriwijaya.
+Para pasukan juga perlu mengetahui mana titik yang akan diserang, sehingga dibutuhkan domain lain yaitu pasopati.xxxx.com dengan alias www.pasopati.xxxx.com yang mengarah ke Kotalingga.
 
 Sriwijaya - `pasopati.sh`
 
@@ -268,7 +268,7 @@ www		IN		CNAME	pasopati.it21.com.
 
 ### No 4
 
-Buatlah subdomain baru untuk keperluan komunikasi rahasia antara pasukan dengan nama rahasia.sudarsana.xxxx.com yang mengarah ke Bedahulu. Pastikan subdomain ini hanya dapat diakses oleh IP tertentu yang telah ditentukan oleh markas pusat.
+Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataan dan suplai yang tersebar. Informasi dan suplai meme terbaru tersebut mengarah ke Tanjungkulai dan domain yang ingin digunakan adalah rujapala.xxxx.com dengan alias www.rujapala.xxxx.com.
 
 Sriwijaya - `rujapala.sh`
 
@@ -305,96 +305,101 @@ www		IN		CNAME	rujapala.it21.com.
 
 ### No 5
 
-Karena adanya ancaman dari pihak luar, buatlah firewall di setiap web server (Tanjungkulai, Bedahulu, dan Kotalingga) untuk memblokir akses dari IP yang mencurigakan. Pastikan firewall ini dapat diatur dan diupdate secara otomatis dari pusat komando di Sriwijaya.
+Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Nusantara.
 
 **Pengerjaan**
 
 ### No 6
 
-Untuk meningkatkan kecepatan akses, buatlah CDN (Content Delivery Network) dengan server di Tanjungkulai, Bedahulu, dan Kotalingga. Pastikan CDN ini dapat mendistribusikan konten secara efisien ke seluruh Nusantara.
+Beberapa daerah memiliki keterbatasan yang menyebabkan hanya dapat mengakses domain secara langsung melalui alamat IP domain tersebut. Karena daerah tersebut tidak diketahui secara spesifik, pastikan semua komputer (client) dapat mengakses domain pasopati.xxxx.com melalui alamat IP Kotalingga (Notes: menggunakan pointer record).
 
 **Pengerjaan**
 
 ### No 7
 
-Buatlah sistem monitoring untuk memantau kinerja dan keamanan dari semua server (Tanjungkulai, Bedahulu, Kotalingga, dan Solok). Sistem monitoring ini harus dapat memberikan laporan secara real-time ke pusat komando di Sriwijaya.
+Akhir-akhir ini seringkali terjadi serangan brainrot ke DNS Server Utama, sebagai tindakan antisipasi kamu diperintahkan untuk membuat DNS Slave di Majapahit untuk semua domain yang sudah dibuat sebelumnya yang mengarah ke Sriwijaya.
 
 **Pengerjaan**
 
 ### No 8
 
-Untuk meningkatkan keamanan, implementasikan sistem autentikasi dua faktor (2FA) untuk semua akses ke server dan domain yang telah dibuat. Pastikan sistem ini dapat diintegrasikan dengan DNS Master di Sriwijaya.
+Kamu juga diperintahkan untuk membuat subdomain khusus melacak kekuatan tersembunyi di Ohio dengan subdomain cakra.sudarsana.xxxx.com yang mengarah ke Bedahulu.
 
 **Pengerjaan**
 
 ### No 9
 
-Buatlah sistem logging yang terpusat di Sriwijaya untuk mencatat semua aktivitas yang terjadi di semua server dan domain. Pastikan log ini dapat diakses dan dianalisis oleh tim keamanan di Sriwijaya.
+Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga sistem komunikasinya terhalang. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan dari siren man oleh Frekuensi Freak dan memasukkannya ke subdomain panah.pasopati.xxxx.com dalam folder panah dan pastikan dapat diakses secara mudah dengan menambahkan alias www.panah.pasopati.xxxx.com dan mendelegasikan subdomain tersebut ke Majapahit dengan alamat IP menuju radar di Kotalingga.
 
 **Pengerjaan**
 
 ### No 10
 
-Untuk memastikan ketersediaan layanan, buatlah sistem failover yang akan mengalihkan trafik ke server cadangan jika server utama mengalami gangguan. Pastikan sistem ini dapat bekerja secara otomatis dan tanpa intervensi manual.
+Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buatlah subdomain baru di subdomain panah yaitu log.panah.pasopati.xxxx.com serta aliasnya www.log.panah.pasopati.xxxx.com yang juga mengarah ke Kotalingga.
 
 **Pengerjaan**
 
 ### No 11
 
-Buatlah sistem load balancing yang lebih canggih dengan menggunakan algoritma round-robin dan least connections. Pastikan sistem ini dapat diatur dan dioptimalkan dari pusat komando di Sriwijaya.
+Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan menikmati meme brainrot terbaru, tetapi hanya warga Majapahit saja yang dapat mengakses jaringan luar secara langsung. Buatlah konfigurasi agar warga IT yang berada diluar Majapahit dapat mengakses jaringan luar melalui DNS Server Majapahit.
 
 **Pengerjaan**
 
 ### No 12
 
-Implementasikan sistem enkripsi untuk semua komunikasi antara server dan client. Pastikan semua data yang dikirim dan diterima terenkripsi dengan baik untuk mencegah penyadapan.
+Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi kota lainnya maka deploy laman web ini (cek resource yg lb) pada Kotalingga menggunakan apache.
 
 **Pengerjaan**
 
 ### No 13
 
-Buatlah sistem backup dan restore yang terpusat di Sriwijaya untuk semua data dan konfigurasi server. Pastikan sistem ini dapat melakukan backup secara otomatis dan restore dengan cepat jika terjadi kegagalan.
+Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak uang dari hasil penjarahan (sebanyak 35 juta, belum dipotong pajak) maka pusat meminta kita memasang load balancer untuk membagikan uangnya pada web nya, dengan Kotalingga, Bedahulu, Tanjungkulai sebagai worker dan Solok sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancer nya.
 
 **Pengerjaan**
 
 ### No 14
 
-Untuk meningkatkan performa, optimalkan konfigurasi web server dan database di semua server (Tanjungkulai, Bedahulu, Kotalingga, dan Solok). Pastikan semua server dapat menangani beban trafik yang tinggi dengan efisien.
+Selama melakukan penjarahan mereka melihat bagaimana web server luar negeri, hal ini membuat mereka iri, dengki, sirik dan ingin flexing sehingga meminta agar web server dan load balancer nya diubah menjadi nginx.
 
 **Pengerjaan**
 
 ### No 15
 
-Buatlah sistem alert yang akan memberikan notifikasi ke tim IT jika terjadi masalah atau serangan ke server. Pastikan notifikasi ini dapat dikirim melalui email, SMS, dan aplikasi pesan instan.
+Markas pusat meminta laporan hasil benchmark dengan menggunakan apache benchmark dari load balancer dengan 2 web server yang berbeda tersebut dan meminta secara detail dengan ketentuan:
+Nama Algoritma Load Balancer
+Report hasil testing apache benchmark 
+Grafik request per second untuk masing masing algoritma. 
+Analisis
+Meme terbaik kalian (terserah ( ͡° ͜ʖ ͡°)) 🤓
 
 **Pengerjaan**
 
 ### No 16
 
-Implementasikan sistem caching di semua server untuk mengurangi beban dan meningkatkan kecepatan akses. Pastikan sistem caching ini dapat diatur dan dioptimalkan dari pusat komando di Sriwijaya.
+Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin akses ke Solok memakai solok.xxxx.com dengan alias www.solok.xxxx.com (sesuai web server terbaik hasil analisis kalian).
 
 **Pengerjaan**
 
 ### No 17
 
-Buatlah sistem audit untuk memeriksa dan memastikan semua konfigurasi dan kebijakan keamanan telah diterapkan dengan benar di semua server dan domain.
+Agar aman, buatlah konfigurasi agar solok.xxx.com hanya dapat diakses melalui port sebesar π x 10^4 = (phi nya desimal) dan 2000 + 2000 log 10 (10) +700 - π = ?.
 
 **Pengerjaan**
 
 ### No 18
 
-Untuk meningkatkan kolaborasi, buatlah sistem berbagi file yang aman dan terenkripsi di antara semua pasukan. Pastikan sistem ini dapat diakses dari semua server dan domain yang telah dibuat.
+Apa bila ada yang mencoba mengakses IP solok akan secara otomatis dialihkan ke www.solok.xxxx.com.
 
 **Pengerjaan**
 
 ### No 19
 
-Buatlah sistem pemulihan bencana (disaster recovery) yang terpusat di Sriwijaya. Pastikan sistem ini dapat memulihkan semua layanan dan data dengan cepat jika terjadi bencana atau kegagalan besar.
+Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses direktori listing yang mengarah ke resource worker2.
 
 **Pengerjaan**
 
 ### No 20
 
-Untuk memastikan semua sistem berjalan dengan baik, lakukan uji coba dan simulasi serangan secara berkala. Pastikan semua tim IT siap dan dapat merespon dengan cepat jika terjadi serangan atau masalah.
+Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
 
 **Pengerjaan**
