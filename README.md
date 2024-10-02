@@ -200,6 +200,35 @@ Karena para pasukan membutuhkan koordinasi untuk melancarkan serangannya, maka b
 
 **Pengerjaan**
 
+Sriwijaya - `sudarsana.sh`
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type master;
+	file "/etc/bind/sudarsana/sudarsana.it21.com";
+	};' >> /etc/bind/named.conf.local
+
+mkdir /etc/bind/sudarsana
+cp /etc/bind/db.local /etc/bind/sudarsana/sudarsana.it21.com
+service bind9 restart
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+www		IN		CNAME	sudarsana.it21.com.
+@       IN      AAAA    ::1' >  /etc/bind/sudarsana/sudarsana.it26.com
+```
+
 ### No 3
 
 Untuk memastikan keamanan dan keandalan sistem, buatlah backup DNS server di Bedahulu yang akan berfungsi sebagai secondary DNS server. DNS server ini harus selalu sinkron dengan DNS Master di Sriwijaya.
