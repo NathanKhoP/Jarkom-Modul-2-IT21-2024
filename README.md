@@ -1609,6 +1609,8 @@ Meme terbaik kalian (terserah ( ͡° ͜ʖ ͡°)) 🤓
 
 **Pengerjaan**
 
+Pembahasan soal nomor 15 ada di [analysis.md](./analysis.md), dikarenakan kebutuhan analisis yang cukup panjang.
+
 ### No 16
 
 Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin akses ke Solok memakai solok.xxxx.com dengan alias www.solok.xxxx.com (sesuai web server terbaik hasil analisis kalian).
