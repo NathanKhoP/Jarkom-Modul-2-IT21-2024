@@ -295,7 +295,7 @@ www		IN		CNAME	rujapala.it21.com.
 @       IN      AAAA    ::1' >  /etc/bind/jarkom/rujapala.it21.com
 ```
 
-**Shell script - `master.sh`**
+**Shell script - `master.sh` (Sriwijaya)**
 
 ```bash
 echo 'zone "sudarsana.it21.com" {
@@ -419,7 +419,7 @@ $TTL    604800
 service bind9 restart
 ```
 
-**Shell script - `master.sh`**
+**Shell script - `master.sh`  (Sriwijaya)**
 
 ```bash
 echo 'zone "sudarsana.it21.com" {
@@ -521,7 +521,14 @@ Akhir-akhir ini seringkali terjadi serangan brainrot ke DNS Server Utama, sebaga
 
 **Pengerjaan**
 
-**Shell script - `master.sh`**
+Tambahkan line-line ini ke zone selain Reverse DNS:
+
+```
+also-notify { 10.74.1.2; }; // IP Majapahit
+allow-transfer { 10.74.1.2; };
+```
+
+**Shell script - `master.sh`  (Sriwijaya)**
 
 ```bash
 echo 'zone "sudarsana.it21.com" {
@@ -622,7 +629,10 @@ $TTL    604800
 service bind9 restart
 ```
 
-**Shell script - `slave.sh`**
+Buat script baru di **Majapahit**:
+
+**Shell script - `slave.sh` (Majapahit)**
+
 ```bash
 echo 'zone "sudarsana.it21.com" {
 	type slave;
@@ -643,6 +653,10 @@ zone "rujapala.it21.com" {
 };' > /etc/bind/named.conf.local
 
 mkdir -p /etc/bind/jarkom
+
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -697,9 +711,12 @@ Kamu juga diperintahkan untuk membuat subdomain khusus melacak kekuatan tersembu
 
 **Pengerjaan**
 
-Tambahkan Subdomain cakra yang mengarah ke Node Bendahulu
+Tambahkan subdomain cakra yang mengarah ke node Bedahulu di sudarsana:
+```
+cakra   IN      A       10.74.2.7   ; IP Bedahulu
+```
 
-**Shell script - `master.sh`**
+**Shell script - `master.sh`  (Sriwijaya)**
 
 ```bash
 echo 'zone "sudarsana.it21.com" {
@@ -808,6 +825,115 @@ service bind9 restart
 Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga sistem komunikasinya terhalang. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan dari siren man oleh Frekuensi Freak dan memasukkannya ke subdomain panah.pasopati.xxxx.com dalam folder panah dan pastikan dapat diakses secara mudah dengan menambahkan alias www.panah.pasopati.xxxx.com dan mendelegasikan subdomain tersebut ke Majapahit dengan alamat IP menuju radar di Kotalingga.
 
 **Pengerjaan**
+
+Tambahkan subdomain panah dan ns1 di pasopati:
+
+```
+ns1       IN      A       10.74.2.4		; IP kotalingga
+panah     IN      NS      ns1
+```
+
+Edit `/etc/bind/named.conf.options` di **Sriwijaya** dan **Majapahit**:
+
+```
+// dnssec-validation auto;
+allow-query{any;};
+```
+
+**Shell script - `slave.sh` (Majapahit)**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type slave;
+    masters { 10.74.2.5 }
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type slave;
+    masters { 10.74.2.5 }
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type slave;
+    masters { 10.74.2.5 }
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "panah.pasopati.it21.com" {
+  type master
+  file /etc/bind/panah/panah.pasopati.it21.com  
+}' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/panah.pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      A       10.74.2.4		; IP kotalingga' >  /etc/bind/jarkom/panah.pasopati.it21.com
+```
 
 ### No 10
 
