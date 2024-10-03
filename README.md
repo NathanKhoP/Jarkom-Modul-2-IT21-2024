@@ -1845,6 +1845,110 @@ Apa bila ada yang mencoba mengakses IP solok akan secara otomatis dialihkan ke w
 
 **Pengerjaan**
 
+**Shell Script - `worker.sh*` (Bedahulu)**
+
+```bash
+service php7.0-fpm start
+service nginx start
+
+curl -L -o lb.zip 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7' -k
+unzip lb.zip -d lb
+
+mv ./lb/worker/index.php /var/www/html/index.php
+rm -rf ./lb
+rm lb.zip
+
+echo 'server {
+    listen 80;
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+    server_name www.solok.it21.com;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    # pass PHP scripts to FastCGI server
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    }
+
+    location ~ /\.ht {
+    deny all;
+    }
+
+    error_log /var/log/nginx/jarkom-it21_error.log;
+    access_log /var/log/nginx/jarkom-it21_access.log;
+}
+
+server {
+    listen 31400; # q1
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    # pass PHP scripts to FastCGI server
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    }
+
+    location ~ /\.ht {
+    deny all;
+    }
+
+    error_log /var/log/nginx/jarkom-it21_error.log;
+    access_log /var/log/nginx/jarkom-it21_access.log;
+}
+
+server {
+    listen 4696; # q2
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    # pass PHP scripts to FastCGI server
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    }
+
+    location ~ /\.ht {
+    deny all;
+    }
+
+    error_log /var/log/nginx/jarkom-it21_error.log;
+    access_log /var/log/nginx/jarkom-it21_access.log;
+}
+
+server {
+  listen 80 default_server;
+  server_name _;
+  return 301 http://www.solok.it21.com;
+}' > /etc/nginx/sites-available/it21
+
+ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
+rm /etc/nginx/sites-enabled/default
+service nginx restart
+```
+
+Testing - `lynx 10.74.2.7`
+
+![alt text](assets/no18-1.png)
+![alt text](assets/no17.png)
+
 ### No 19
 
 Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses direktori listing yang mengarah ke resource worker2.
