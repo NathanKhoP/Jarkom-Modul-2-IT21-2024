@@ -7,12 +7,15 @@
 
 **Deskripsi** - Sebuah kerajaan besar di Indonesia sedang mengalami pertempuran dengan penjajah. Kerajaan tersebut adalah Sriwijaya. Karena merasa terdesak Sriwijaya meminta bantuan pada Majapahit untuk mempertahankan wilayahnya. Pertempuran besar tersebut berada di Nusantara. Untuk topologi lihat pada link ini.
 
+## Daftar Isi
+
 - [Jarkom-Modul-2-IT21-2024](#jarkom-modul-2-it21-2024)
-  - [Prerequisites](#prerequisites)
-    - [Topologi](#topologi)
-    - [Konfigurasi](#konfigurasi)
+  - [Daftar Isi](#daftar-isi)
+- [Prerequisites](#prerequisites)
+  - [Topologi](#topologi)
+  - [Konfigurasi](#konfigurasi)
     - [Set .bashrc](#set-bashrc)
-  - [Soal](#soal)
+- [Soal](#soal)
     - [No 1](#no-1)
     - [No 2](#no-2)
     - [No 3](#no-3)
@@ -34,13 +37,13 @@
     - [No 19](#no-19)
     - [No 20](#no-20)
 
-## Prerequisites
+# Prerequisites
 
-### Topologi
+## Topologi
 
 ![alt text](assets/topologi.png)
 
-### Konfigurasi
+## Konfigurasi
 
 ```bash
 vi /etc/network/interfaces
@@ -183,11 +186,13 @@ echo nameserver 192.168.122.1 > /etc/resolv.conf
 apt-get update
 apt-get install bind9 -y
 service bind9 start
+
+bash master.sh
 ```
 
 **DNS Slave**
 
-Majapahit, Tanjungkulai, Bedahulu
+Majapahit
 
 ```bash
 echo nameserver 192.168.122.1 > /etc/resolv.conf
@@ -196,24 +201,45 @@ apt-get install bind9 -y
 service bind9 start
 apt-get install apache2 -y
 service apache2 start
-apt-get install lynx -y
-apt-get install php -y
+apt-get install lynx php -y
+
+bash slave.sh
 ```
 
-**Kotalingga**
+**Web Server**
+
+Kotalingga, Tanjungkulai, Bedahulu
 
 ```bash
 echo 'nameserver 10.74.2.5
 nameserver 10.74.1.2' > /etc/resolv.conf
 apt-get update
-apt-get install curl
-apt-get install unzip
+apt-get install apache2 nginx -y
+apt-get install curl -y
+apt-get install unzip -y
 apt-get install libapache2-mod-php7.0 -y
-apt-get install php php-mcrypt php-mysql -y
+apt-get install php php-fpm php-mcrypt php-mysql -y
+
+bash worker.sh
+```
+
+**Load Balancer**
+
+Solok
+
+```bash
+echo 'nameserver 10.74.2.5
+nameserver 10.74.1.2' > /etc/resolv.conf
+apt-get update
+apt-get install apache2 dnsutils nginx php-fpm php lynx -y
+
+bash loadbalancer.sh
 ```
 
 **Clients**
 
+Mulawarman, GrahamBell, Samaratungga, Srikandi
+
 ```bash
 echo 'nameserver 10.74.2.5
 nameserver 10.74.1.2' > /etc/resolv.conf
@@ -222,7 +248,9 @@ apt-get install lynx -y
 apt-get install libapache2-mod-php7.0 -y
 ```
 
-## Soal
+**NOTE**: semua .sh yang ada di .bashrc - master, slave, worker, loadbalancer akan ada di bagian pengerjaan soal. (foreshadowing tutorial penguli handal :thumbsup:)
+
+# Soal
 
 ### No 1
 
@@ -1261,6 +1289,8 @@ service bind9 restart
 
 Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan menikmati meme brainrot terbaru, tetapi hanya warga Majapahit saja yang dapat mengakses jaringan luar secara langsung. Buatlah konfigurasi agar warga IT yang berada diluar Majapahit dapat mengakses jaringan luar melalui DNS Server Majapahit.
 
+**Pengerjaan**
+
 Tambahkan line berikut di `/etc/bind/named.conf.options/`:
 
 ```
@@ -1383,22 +1413,49 @@ service bind9 restart
 
 ![alt text](assets/no11.png)
 
-**Pengerjaan**
-
 ### No 12
 
 Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi kota lainnya maka deploy laman web ini (cek resource yg lb) pada Kotalingga menggunakan apache.
 
 **Pengerjaan**
 
+**Shell script - `worker.sh` (Kotalingga)**
+
 ```bash
-curl -LO 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7'
+rm /etc/apache2/sites-enabled/000-default.conf
+echo '<VirtualHost *:8080>
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html
+</VirtualHost>' > /etc/apache2/sites-available/it21.conf
+
+echo 'Listen 80
+Listen 8080
+
+<IfModule ssl_module>
+    Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+    Listen 443
+</IfModule>' > /etc/apache2/ports.conf
+
+a2dissite 000-default.conf
+a2ensite it21.conf
+service apache2 reload
+
+curl -L -o lb.zip 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7' -k
 unzip lb.zip -d lb
 
-cp ./lb/worker/index.php /var/www/html/index.php
+mv ./lb/worker/index.php /var/www/html/index.php
+rm -rf ./lb
+rm lb.zip
+
+service apache2 restart
 ```
 
-Edit `/etc/apache2/sites-available/000-default.conf`:
+Testing - `lynx 10.74.2.4/index.php`
+
+![alt text](assets/no12.png)
 
 ### No 13
 
@@ -1406,6 +1463,39 @@ Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak u
 
 **Pengerjaan**
 
+Kita bisa memakai shell script `worker.sh` di Tanjungkulai dan Bedahulu.
+
+**Shell Script - `loadbalancer.sh` (Solok)**
+
+```bash
+a2enmod proxy
+a2enmod proxy_http
+a2enmod proxy_balancer
+a2enmod lbmethod_byrequests
+
+service apache2 start
+
+echo '
+<VirtualHost *:80>
+    <Proxy balancer://serverpool>
+        BalancerMember http://10.74.2.4/
+        BalancerMember http://10.74.2.6/
+        BalancerMember http://10.74.2.7/
+        ProxySet lbmethod=byrequests
+    </Proxy>
+    ProxyPass / balancer://serverpool/
+    ProxyPassReverse / balancer://serverpool/
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+
+service apache2 restart
+```
+
+Testing - `lynx 10.74.2.4:8080/index.php`
+![alt text](assets/no13-1.png)
+Testing - `lynx 10.74.2.6:8080/index.php`
+![alt text](assets/no13-2.png)
+Testing - `lynx 10.74.2.7:8080/index.php`
+![alt text](assets/no13-3.png)
 
 
 ### No 14
@@ -1413,6 +1503,8 @@ Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak u
 Selama melakukan penjarahan mereka melihat bagaimana web server luar negeri, hal ini membuat mereka iri, dengki, sirik dan ingin flexing sehingga meminta agar web server dan load balancer nya diubah menjadi nginx.
 
 **Pengerjaan**
+
+
 
 ### No 15
 
