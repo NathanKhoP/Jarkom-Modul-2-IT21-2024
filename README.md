@@ -5,7 +5,7 @@
 | Nathan Kho Pancras | 5027221002 |
 | Muhammad Andrean Rizq Prasetio | 5027221052 |
 
-**Deskripsi** - Sebuah kerajaan besar di Indonesia sedang mengalami pertempuran dengan penjajah. Kerajaan tersebut adalah Sriwijaya. Karena merasa terdesak Sriwijaya meminta bantuan pada Majapahit untuk mempertahankan wilayahnya. Pertempuran besar tersebut berada di Nusantara. (what)
+**Deskripsi** - Sebuah kerajaan besar di Indonesia sedang mengalami pertempuran dengan penjajah. Kerajaan tersebut adalah Sriwijaya. Karena merasa terdesak Sriwijaya meminta bantuan pada Majapahit untuk mempertahankan wilayahnya. Pertempuran besar tersebut berada di Nusantara.
 
 ## Daftar Isi
 
@@ -266,7 +266,7 @@ Karena para pasukan membutuhkan koordinasi untuk melancarkan serangannya, maka b
 
 **Pengerjaan**
 
-Sriwijaya - `sudarsana.sh`
+Sriwijaya
 
 ```bash
 echo 'zone "sudarsana.it21.com" {
@@ -301,7 +301,7 @@ Para pasukan juga perlu mengetahui mana titik yang akan diserang, sehingga dibut
 
 **Pengerjaan**
 
-Sriwijaya - `pasopati.sh`
+Sriwijaya
 
 ```bash
 echo 'zone "pasopati.it21.com" {
@@ -336,7 +336,7 @@ Markas pusat meminta dibuatnya domain khusus untuk menaruh informasi persenjataa
 
 **Pengerjaan**
 
-Sriwijaya - `rujapala.sh`
+Sriwijaya
 
 ```bash
 echo 'zone "rujapala.it21.com" {
@@ -1649,7 +1649,7 @@ zone "2.74.10.in-addr.arpa" {
 
 zone "solok.it21.com" {
     type master;
-    file "/etc/bind/it07/solok.it07.com";
+    file "/etc/bind/it21/solok.it21.com";
 };' > /etc/bind/named.conf.local
 
 mkdir -p /etc/bind/jarkom
@@ -1722,6 +1722,21 @@ $TTL    604800
 ns1     IN      A       10.74.2.4       ; IP Kotalingga
 panah   IN      NS      ns1
 4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     solok.it21.com. root.solok.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      solok.it21.com.
+@       IN      A       10.67.2.3
+www     IN      CNAME   solok.it21.com.' > /etc/bind/jarkom/solok.it21.com
 
 echo 'options {
         directory "/var/cache/bind";
