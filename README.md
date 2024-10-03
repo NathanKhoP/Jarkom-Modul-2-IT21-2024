@@ -1947,16 +1947,237 @@ service nginx restart
 Testing - `lynx 10.74.2.7`
 
 ![alt text](assets/no18-1.png)
+
 ![alt text](assets/no17.png)
 
 ### No 19
 
 Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses direktori listing yang mengarah ke resource worker2.
 
-**Pengerjaan**
-
 ### No 20
 
 Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
 
 **Pengerjaan**
+
+**Shell script - `worker.sh` (Kotalingga)**
+
+```bash
+service php7.0-fpm start
+service nginx start
+
+curl -L -o lb.zip 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7' -k
+unzip lb.zip -d lb
+
+mv ./lb/worker/index.php /var/www/html/index.php
+rm -rf ./lb
+rm lb.zip
+
+curl -L -o worker2.zip 'https://drive.google.com/uc?export=download&id=1JGk8b-tZgzAOnDqTx5B3F9qN6AyNs7Zy' -k
+unzip worker2.zip -d worker2
+
+mkdir /var/www/html/resources
+mv worker2/* /var/www/html/resources
+
+echo 'server {
+    listen 8082; # interchangable, use 8083+ for other nodes
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    # pass PHP scripts to FastCGI server
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    }
+
+    location ~ /\.ht {
+     deny all;
+    }
+
+    error_log /var/log/nginx/jarkom-it21_error.log;
+    access_log /var/log/nginx/jarkom-it21_access.log;
+}
+
+server {
+    listen 80;
+    server_name sekianterimakasih.it21.com www.sekianterimakasih.it21.com;
+
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+    location /resources {
+        alias /var/www/html/resources/worker2;
+        autoindex on;
+    }
+
+    error_log /var/log/nginx/jarkom-it21_error.log;
+    access_log /var/log/nginx/jarkom-it21_access.log;
+}' > /etc/nginx/sites-available/it21
+
+ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
+rm /etc/nginx/sites-enabled/default
+service nginx restart
+```
+
+**Shell script - `master.sh`  (Sriwijaya)**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "2.74.10.in-addr.arpa" {
+	type master;
+	file "/etc/bind/jarkom/2.74.10.in-addr.arpa";
+};
+
+zone "solok.it21.com" {
+    type master;
+    file "/etc/bind/jarkom/solok.it21.com";
+};
+
+zone "sekianterimakasih.it21.com" {
+    type master;
+    file "/etc/bind/jarkom/sekianterimakasih.it21.com";
+};' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/2.74.10.in-addr.arpa
+cp /etc/bind/db.local /etc/bind/jarkom/solok.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/sekianterimakasih.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+cakra   IN      A       10.74.2.7   ; IP Bedahulu
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   pasopati.it21.com.
+ns1       IN      A       10.74.1.2		; IP majapahit
+panah     IN      NS      ns1' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for reverse DNS lookup
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      pasopati.it21.com.
+ns1     IN      A       10.74.2.4       ; IP Kotalingga
+panah   IN      NS      ns1
+4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     solok.it21.com. root.solok.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      solok.it21.com.
+@       IN      A       10.74.2.7     ; IP bedahulu
+www     IN      CNAME   solok.it21.com.' > /etc/bind/jarkom/solok.it21.com
+
+echo ' ;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     sekianterimakasih.it21.com. root.sekianterimakasih.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sekianterimakasih.it21.com.
+@       IN      A       10.69.4.2
+www     IN      CNAME   sekianterimakasih.it21.com. ' > /etc/bind/jarkom/sekianterimakasih.it21.com
+
+echo 'options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
