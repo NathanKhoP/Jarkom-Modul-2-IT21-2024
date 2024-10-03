@@ -1554,6 +1554,7 @@ service php7.0-fpm start
 service nginx start
 
 echo 'upstream webserver  {
+    ip_hash;
     server 10.74.2.4:8082; #kota
     server 10.74.2.6:8083; #tanjung
     server 10.74.2.7:8084; #satunya
@@ -1738,7 +1739,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      solok.it21.com.
-@       IN      A       10.74.2.3
+@       IN      A       10.74.2.7     ; IP bedahulu
 www     IN      CNAME   solok.it21.com.' > /etc/bind/jarkom/solok.it21.com
 
 echo 'options {
@@ -1766,51 +1767,77 @@ Agar aman, buatlah konfigurasi agar solok.xxx.com hanya dapat diakses melalui po
 Math.floor(2000 + 2000 log 10 (10) + 700 - 3,14) = 4696
 ```
 
-**Shell Script - `loadbalancer.sh` (Solok)**
+**Shell Script - `worker.sh*` (Bedahulu)**
 
 ```bash
-service php7.0-fpm start
-service nginx start
+  service php7.0-fpm start
+  service nginx start
 
-echo 'upstream webserver  {
-    server 10.74.2.4:8082; #kota
-    server 10.74.2.6:8083; #tanjung
-    server 10.74.2.7:8084; #satunya
-}
+  curl -L -o lb.zip 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7' -k
+  unzip lb.zip -d lb
 
-server {
-    listen 31400;
-    server_name solok.it21.com;
+  mv ./lb/worker/index.php /var/www/html/index.php
+  rm -rf ./lb
+  rm lb.zip
 
-    location / {
-        proxy_pass http://webserver;
-    }
-}
+  echo 'server {
+      listen 31400; # q1
+      root /var/www/html;
 
-server {
-    listen 4696;
-    server_name solok.it21.com;
+      index index.php index.html index.htm;
+      server_name _;
 
-    location / {
-        proxy_pass http://webserver;
-    }
-}
+      location / {
+          try_files \$uri \$uri/ /index.php?\$query_string;
+      }
 
+      # pass PHP scripts to FastCGI server
+      location ~ \.php$ {
+          include snippets/fastcgi-php.conf;
+          fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+      }
 
-server {
-    listen 8082;
-    listen 8083;
-    listen 8084;
-    server_name 10.74.2.3;
+      location ~ /\.ht {
+      deny all;
+      }
 
-    return 404;
-}' > /etc/nginx/sites-available/it21
+      error_log /var/log/nginx/jarkom-it21_error.log;
+      access_log /var/log/nginx/jarkom-it21_access.log;
+  }
 
-ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
-rm /etc/nginx/sites-enabled/default
+  server {
+      listen 4696; # q2
+      root /var/www/html;
 
-service nginx restart
+      index index.php index.html index.htm;
+      server_name _;
+
+      location / {
+          try_files \$uri \$uri/ /index.php?\$query_string;
+      }
+
+      # pass PHP scripts to FastCGI server
+      location ~ \.php$ {
+          include snippets/fastcgi-php.conf;
+          fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+      }
+
+      location ~ /\.ht {
+      deny all;
+      }
+
+      error_log /var/log/nginx/jarkom-it21_error.log;
+      access_log /var/log/nginx/jarkom-it21_access.log;
+  }' > /etc/nginx/sites-available/it21
+
+  ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
+  rm /etc/nginx/sites-enabled/default
+  service nginx restart
 ```
+
+Testing - `lynx solok.it21.com:31400`
+Testing - `lynx solok.it21.com:4696`
+![alt text](assets/no17.png)
 
 ### No 18
 
