@@ -1954,12 +1954,6 @@ Testing - `lynx 10.74.2.7`
 
 Karena probset sudah kehabisan ide masuk ke salah satu worker buatkan akses direktori listing yang mengarah ke resource worker2.
 
-### No 20
-
-Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
-
-**Pengerjaan**
-
 **Shell script - `worker.sh` (Kotalingga)**
 
 ```bash
@@ -2028,6 +2022,12 @@ ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
 rm /etc/nginx/sites-enabled/default
 service nginx restart
 ```
+
+### No 20
+
+Worker tersebut harus dapat di akses dengan sekiantterimakasih.xxxx.com dengan alias www.sekiantterimakasih.xxxx.com.
+
+**Pengerjaan**
 
 **Shell script - `master.sh`  (Sriwijaya)**
 
