@@ -1372,7 +1372,7 @@ echo 'options {
 
         forwarders {
           192.168.122.1;
-        }
+        };
 
         auth-nxdomain no;    # conform to RFC1035
         listen-on-v6 { any; };
@@ -1380,6 +1380,8 @@ echo 'options {
 
 service bind9 restart
 ```
+
+![alt text](assets/no11.png)
 
 **Pengerjaan**
 
