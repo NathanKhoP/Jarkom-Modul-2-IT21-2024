@@ -668,7 +668,7 @@ $TTL    604800
 @       IN      NS      pasopati.it21.com.
 4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
 
-service bind9 restart
+service bind9 restart
 ```
 
 Buat script baru di **Majapahit**:
@@ -678,19 +678,19 @@ Buat script baru di **Majapahit**:
 ```bash
 echo 'zone "sudarsana.it21.com" {
 	type slave;
-    masters { 10.74.2.5 }
+    masters { 10.74.2.5; };
 	file "/etc/bind/jarkom/sudarsana.it21.com";
 };
 
 zone "pasopati.it21.com" {
  	type slave;
-    masters { 10.74.2.5 }
+    masters { 10.74.2.5; };
  	file "/etc/bind/jarkom/pasopati.it21.com"; 
 };
 
-zone "rujapala.it21.com" {
+zone "rujapala.it21.com" {  
  	type slave;
-    masters { 10.74.2.5 }
+    masters { 10.74.2.5; };
  	file "/etc/bind/jarkom/rujapala.it21.com"; 
 };' > /etc/bind/named.conf.local
 
@@ -745,7 +745,13 @@ $TTL    604800
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
 www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+service bind9 restart
 ```
+
+Hasil tes DNS Slave
+
+![alt text](assets/no7.png)
 
 ### No 8
 
@@ -862,6 +868,10 @@ panah   IN      NS      ns1
 service bind9 restart
 ```
 
+Tes domain cakra.sudarsana.it21.com
+
+![alt text](assets/no8.png)
+
 ### No 9
 
 Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga sistem komunikasinya terhalang. Untuk melindungi warga, kita diperlukan untuk membuat sistem peringatan dari siren man oleh Frekuensi Freak dan memasukkannya ke subdomain panah.pasopati.xxxx.com dalam folder panah dan pastikan dapat diakses secara mudah dengan menambahkan alias www.panah.pasopati.xxxx.com dan mendelegasikan subdomain tersebut ke Majapahit dengan alamat IP menuju radar di Kotalingga.
@@ -874,6 +884,18 @@ Tambahkan subdomain panah dan ns1 di pasopati di **Sriwijaya**:
 ns1       IN      A       10.74.1.2		; IP majapahit
 panah     IN      NS      ns1
 ```
+
+Edit `/etc/bind/named.conf.options` di **Sriwijaya** dan **Majapahit**:
+
+options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};
+
 
 **Shell script - `master.sh`  (Sriwijaya)**
 
@@ -978,14 +1000,16 @@ ns1     IN      A       10.74.2.4       ; IP Kotalingga
 panah   IN      NS      ns1
 4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
 
+echo 'options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
 service bind9 restart
-```
-
-Edit `/etc/bind/named.conf.options` di **Sriwijaya** dan **Majapahit**:
-
-```
-// dnssec-validation auto;
-allow-query{any;};
 ```
 
 **Shell script - `slave.sh` (Majapahit)**
@@ -993,26 +1017,26 @@ allow-query{any;};
 ```bash
 echo 'zone "sudarsana.it21.com" {
 	type slave;
-    masters { 10.74.2.5 }
+    masters { 10.74.2.5; };
 	file "/etc/bind/jarkom/sudarsana.it21.com";
 };
 
 zone "pasopati.it21.com" {
  	type slave;
-    masters { 10.74.2.5 }
+    masters { 10.74.2.5; };
  	file "/etc/bind/jarkom/pasopati.it21.com"; 
 };
 
 zone "rujapala.it21.com" {
  	type slave;
-    masters { 10.74.2.5 }
+    masters { 10.74.2.5; };
  	file "/etc/bind/jarkom/rujapala.it21.com"; 
 };
 
 zone "panah.pasopati.it21.com" {
-  type master
-  file /etc/bind/panah/panah.pasopati.it21.com  
-}' > /etc/bind/named.conf.local
+  type master;
+  file "/etc/bind/jarkom/panah.pasopati.it21.com";
+};' > /etc/bind/named.conf.local
 
 mkdir -p /etc/bind/jarkom
 
@@ -1081,7 +1105,20 @@ $TTL    604800
 @       IN      NS      panah.pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
 www     IN      CNAME   panah.pasopati.it21.com.' >  /etc/bind/jarkom/panah.pasopati.it21.com
+
+echo 'options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
 ```
+
+![alt text](assets/no9.png)
 
 ### No 10
 
@@ -1110,10 +1147,239 @@ log     IN      A       10.74.2.4		; IP kotalingga
 www.log IN      CNAME   panah.pasopati.it21.com.' >  /etc/bind/jarkom/panah.pasopati.it21.com
 ```
 
+**Shell script - `slave.sh` (Majapahit)**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type slave;
+    masters { 10.74.2.5; };
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type slave;
+    masters { 10.74.2.5; };
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type slave;
+    masters { 10.74.2.5; };
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "panah.pasopati.it21.com" {
+  type master;
+  file "/etc/bind/jarkom/panah.pasopati.it21.com";
+};' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/panah.pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     panah.pasopati.it21.com. root.panah.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      panah.pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   panah.pasopati.it21.com.
+log     IN      A       10.74.2.4		; IP kotalingga
+www.log IN      CNAME   panah.pasopati.it21.com.' >  /etc/bind/jarkom/panah.pasopati.it21.com
+
+echo 'options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
+
+![alt text](assets/no10.png)
 
 ### No 11
 
 Setelah pertempuran mereda, warga IT dapat kembali mengakses jaringan luar dan menikmati meme brainrot terbaru, tetapi hanya warga Majapahit saja yang dapat mengakses jaringan luar secara langsung. Buatlah konfigurasi agar warga IT yang berada diluar Majapahit dapat mengakses jaringan luar melalui DNS Server Majapahit.
+
+Tambahkan line berikut di `/etc/bind/named.conf.options/`:
+
+```
+forwarders {
+  192.168.122.1;
+}
+```
+
+**Shell script - `slave.sh` (Majapahit)**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type slave;
+    masters { 10.74.2.5; };
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type slave;
+    masters { 10.74.2.5; };
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type slave;
+    masters { 10.74.2.5; };
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "panah.pasopati.it21.com" {
+  type master;
+  file "/etc/bind/jarkom/panah.pasopati.it21.com";
+};' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/panah.pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     panah.pasopati.it21.com. root.panah.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      panah.pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   panah.pasopati.it21.com.
+log     IN      A       10.74.2.4		; IP kotalingga
+www.log IN      CNAME   panah.pasopati.it21.com.' >  /etc/bind/jarkom/panah.pasopati.it21.com
+
+echo 'options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        forwarders {
+          192.168.122.1;
+        }
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
 
 **Pengerjaan**
 
