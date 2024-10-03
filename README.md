@@ -200,11 +200,26 @@ apt-get install lynx -y
 apt-get install php -y
 ```
 
+**Kotalingga**
+
+```bash
+echo 'nameserver 10.74.2.5
+nameserver 10.74.1.2' > /etc/resolv.conf
+apt-get update
+apt-get install curl
+apt-get install unzip
+apt-get install libapache2-mod-php7.0 -y
+apt-get install php php-mcrypt php-mysql -y
+```
+
 **Clients**
 
 ```bash
 echo 'nameserver 10.74.2.5
 nameserver 10.74.1.2' > /etc/resolv.conf
+apt-get update
+apt-get install lynx -y
+apt-get install libapache2-mod-php7.0 -y
 ```
 
 ## Soal
@@ -248,7 +263,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.
+www     IN      CNAME   sudarsana.it21.com.
 @       IN      AAAA    ::1' >  /etc/bind/jarkom/sudarsana.it21.com
 ```
 
@@ -283,7 +298,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www		IN		CNAME	pasopati.it21.com.
+www     IN      CNAME   pasopati.it21.com.
 @       IN      AAAA    ::1' >  /etc/bind/jarkom/pasopati.it21.com
 ```
 
@@ -318,7 +333,7 @@ $TTL    604800
 ;
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www		IN		CNAME	rujapala.it21.com.
+www     IN      CNAME   rujapala.it21.com.
 @       IN      AAAA    ::1' >  /etc/bind/jarkom/rujapala.it21.com
 ```
 
@@ -359,7 +374,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -374,7 +389,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -389,7 +404,7 @@ $TTL    604800
 ;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
 
 service bind9 restart
 ```
@@ -489,7 +504,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -504,7 +519,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -519,7 +534,7 @@ $TTL    604800
 ;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
 
 echo ';
 ; BIND data file for reverse DNS lookup
@@ -607,7 +622,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -622,7 +637,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -637,7 +652,7 @@ $TTL    604800
 ;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
 
 echo ';
 ; BIND data file for reverse DNS lookup
@@ -699,7 +714,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -714,7 +729,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -729,7 +744,7 @@ $TTL    604800
 ;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
 ```
 
 ### No 8
@@ -796,7 +811,7 @@ $TTL    604800
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
 cakra   IN      A       10.74.2.7   ; IP Bedahulu
-www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -811,7 +826,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -826,7 +841,7 @@ $TTL    604800
 ;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
 
 echo ';
 ; BIND data file for reverse DNS lookup
@@ -853,11 +868,117 @@ Karena terjadi serangan DDOS oleh shikanoko nokonoko koshitantan (NUN), sehingga
 
 **Pengerjaan**
 
-Tambahkan subdomain panah dan ns1 di pasopati:
+Tambahkan subdomain panah dan ns1 di pasopati di **Sriwijaya**:
 
 ```
-ns1       IN      A       10.74.2.4		; IP kotalingga
+ns1       IN      A       10.74.1.2		; IP majapahit
 panah     IN      NS      ns1
+```
+
+**Shell script - `master.sh`  (Sriwijaya)**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "2.74.10.in-addr.arpa" {
+	type master;
+	file "/etc/bind/jarkom/2.74.10.in-addr.arpa";
+};' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+cakra   IN      A       10.74.2.7   ; IP Bedahulu
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   pasopati.it21.com.
+ns1       IN      A       10.74.1.2		; IP majapahit
+panah     IN      NS      ns1' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for reverse DNS lookup
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      pasopati.it21.com.
+ns1     IN      A       10.74.2.4       ; IP Kotalingga
+panah   IN      NS      ns1
+4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+service bind9 restart
 ```
 
 Edit `/etc/bind/named.conf.options` di **Sriwijaya** dan **Majapahit**:
@@ -914,7 +1035,7 @@ $TTL    604800
 ;
 @       IN      NS      sudarsana.it21.com.
 @       IN      A       10.74.2.2		; IP solok
-www	IN		CNAME	sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -929,7 +1050,7 @@ $TTL    604800
 ;
 @       IN      NS      pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www	IN	CNAME	pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
+www     IN      CNAME   pasopati.it21.com.' >  /etc/bind/jarkom/pasopati.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -944,22 +1065,22 @@ $TTL    604800
 ;	
 @       IN      NS      rujapala.it21.com.
 @       IN      A       10.74.2.6		; IP tanjungkulai
-www	IN	CNAME	rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
 ;
 $TTL    604800
-@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+@       IN      SOA     panah.pasopati.it21.com. root.panah.pasopati.it21.com. (
                               2         ; Serial
                          604800         ; Refresh
                           86400         ; Retry
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ;
-@       IN      NS      pasopati.it21.com.
+@       IN      NS      panah.pasopati.it21.com.
 @       IN      A       10.74.2.4		; IP kotalingga
-www     IN      A       10.74.2.4		; IP kotalingga' >  /etc/bind/jarkom/panah.pasopati.it21.com
+www     IN      CNAME   panah.pasopati.it21.com.' >  /etc/bind/jarkom/panah.pasopati.it21.com
 ```
 
 ### No 10
@@ -967,6 +1088,28 @@ www     IN      A       10.74.2.4		; IP kotalingga' >  /etc/bind/jarkom/panah.pa
 Markas juga meminta catatan kapan saja meme brain rot akan dijatuhkan, maka buatlah subdomain baru di subdomain panah yaitu log.panah.pasopati.xxxx.com serta aliasnya www.log.panah.pasopati.xxxx.com yang juga mengarah ke Kotalingga.
 
 **Pengerjaan**
+
+Edit `/etc/bind/jarkom/panah.pasopati.it21.com`:
+
+```bash
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     panah.pasopati.it21.com. root.panah.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      panah.pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   panah.pasopati.it21.com.
+log     IN      A       10.74.2.4		; IP kotalingga
+www.log IN      CNAME   panah.pasopati.it21.com.' >  /etc/bind/jarkom/panah.pasopati.it21.com
+```
+
 
 ### No 11
 
@@ -980,11 +1123,22 @@ Karena pusat ingin sebuah laman web yang ingin digunakan untuk memantau kondisi 
 
 **Pengerjaan**
 
+```bash
+curl -LO 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7'
+unzip lb.zip -d lb
+
+cp ./lb/worker/index.php /var/www/html/index.php
+```
+
+Edit `/etc/apache2/sites-available/000-default.conf`:
+
 ### No 13
 
 Karena Sriwijaya dan Majapahit memenangkan pertempuran ini dan memiliki banyak uang dari hasil penjarahan (sebanyak 35 juta, belum dipotong pajak) maka pusat meminta kita memasang load balancer untuk membagikan uangnya pada web nya, dengan Kotalingga, Bedahulu, Tanjungkulai sebagai worker dan Solok sebagai Load Balancer menggunakan apache sebagai web server nya dan load balancer nya.
 
 **Pengerjaan**
+
+
 
 ### No 14
 
