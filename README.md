@@ -5,7 +5,7 @@
 | Nathan Kho Pancras | 5027221002 |
 | Muhammad Andrean Rizq Prasetio | 5027221052 |
 
-**Deskripsi** - Sebuah kerajaan besar di Indonesia sedang mengalami pertempuran dengan penjajah. Kerajaan tersebut adalah Sriwijaya. Karena merasa terdesak Sriwijaya meminta bantuan pada Majapahit untuk mempertahankan wilayahnya. Pertempuran besar tersebut berada di Nusantara. Untuk topologi lihat pada link ini.
+**Deskripsi** - Sebuah kerajaan besar di Indonesia sedang mengalami pertempuran dengan penjajah. Kerajaan tersebut adalah Sriwijaya. Karena merasa terdesak Sriwijaya meminta bantuan pada Majapahit untuk mempertahankan wilayahnya. Pertempuran besar tersebut berada di Nusantara. (what)
 
 ## Daftar Isi
 
@@ -1504,7 +1504,99 @@ Selama melakukan penjarahan mereka melihat bagaimana web server luar negeri, hal
 
 **Pengerjaan**
 
+**Shell script - `worker.sh` (Web Server)**
 
+```bash
+service php7.0-fpm start
+service nginx start
+
+curl -L -o lb.zip 'https://docs.google.com/uc?export=download&id=1Sqf0TIiybYyUp5nyab4twy9svkgq8bi7' -k
+unzip lb.zip -d lb
+
+mv ./lb/worker/index.php /var/www/html/index.php
+rm -rf ./lb
+rm lb.zip
+
+echo 'server {
+    listen 8082; # interchangable, use 8083+ for other nodes
+    root /var/www/html;
+
+    index index.php index.html index.htm;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ /index.php?\$query_string;
+    }
+
+    # pass PHP scripts to FastCGI server
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    }
+
+    location ~ /\.ht {
+     deny all;
+    }
+
+    error_log /var/log/nginx/jarkom-it21_error.log;
+    access_log /var/log/nginx/jarkom-it21_access.log;
+}' > /etc/nginx/sites-available/it21
+
+ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
+rm /etc/nginx/sites-enabled/default
+service nginx restart
+```
+
+**Shell Script - `loadbalancer.sh` (Solok)**
+
+```bash
+service php7.0-fpm start
+service nginx start
+
+echo 'upstream webserver  {
+    server 10.74.2.4:8082; #kota
+    server 10.74.2.6:8083; #tanjung
+    server 10.74.2.7:8084; #satunya
+}
+
+server {
+  listen 8082;
+  server_name 10.74.2.4;
+
+  location / {
+    proxy_pass http://webserver;
+  }
+}
+
+server {
+  listen 8083;
+  server_name 10.74.2.6;
+
+  location / {
+    proxy_pass http://webserver;
+  }
+}
+
+server {
+  listen 8084;
+  server_name 10.74.2.7;
+
+  location / {
+    proxy_pass http://webserver;
+  }
+}' > /etc/nginx/sites-available/it21
+
+ln -s /etc/nginx/sites-available/it02 /etc/nginx/sites-enabled
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+
+Testing - `lynx 10.74.2.4:8082/index.php`
+![alt text](assets/no14-1.png)
+Testing - `lynx 10.74.2.6:8083/index.php`
+![alt text](assets/no14-2.png)
+Testing - `lynx 10.74.2.7:8084/index.php`
 
 ### No 15
 
