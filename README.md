@@ -1759,6 +1759,57 @@ Agar aman, buatlah konfigurasi agar solok.xxx.com hanya dapat diakses melalui po
 
 **Pengerjaan**
 
+```
+3,14 x pow(10, 4) = 31400
+Math.floor(2000 + 2000 log 10 (10) + 700 - 3,14) = 4696
+```
+
+**Shell Script - `loadbalancer.sh` (Solok)**
+
+```bash
+service php7.0-fpm start
+service nginx start
+
+echo 'upstream webserver  {
+    server 10.74.2.4:8082; #kota
+    server 10.74.2.6:8083; #tanjung
+    server 10.74.2.7:8084; #satunya
+}
+
+server {
+    listen 31400;
+    server_name solok.it21.com;
+
+    location / {
+        proxy_pass http://webserver;
+    }
+}
+
+server {
+    listen 4696;
+    server_name solok.it21.com;
+
+    location / {
+        proxy_pass http://webserver;
+    }
+}
+
+
+server {
+    listen 8082;
+    listen 8083;
+    listen 8084;
+    server_name 10.74.2.3;
+
+    return 404;
+}' > /etc/nginx/sites-available/it21
+
+ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+
 ### No 18
 
 Apa bila ada yang mencoba mengakses IP solok akan secara otomatis dialihkan ke www.solok.xxxx.com.
