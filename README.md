@@ -1649,7 +1649,7 @@ zone "2.74.10.in-addr.arpa" {
 
 zone "solok.it21.com" {
     type master;
-    file "/etc/bind/it21/solok.it21.com";
+    file "/etc/bind/jarkom/solok.it21.com";
 };' > /etc/bind/named.conf.local
 
 mkdir -p /etc/bind/jarkom
@@ -1657,6 +1657,7 @@ cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
 cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
 cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
 cp /etc/bind/db.local /etc/bind/jarkom/2.74.10.in-addr.arpa
+cp /etc/bind/db.local /etc/bind/jarkom/solok.it21.com
 
 echo ';
 ; BIND data file for local loopback interface
@@ -1735,7 +1736,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      solok.it21.com.
-@       IN      A       10.67.2.3
+@       IN      A       10.74.2.3
 www     IN      CNAME   solok.it21.com.' > /etc/bind/jarkom/solok.it21.com
 
 echo 'options {
@@ -1749,6 +1750,8 @@ echo 'options {
 
 service bind9 restart
 ```
+
+![alt text](assets/no16.png)
 
 ### No 17
 
