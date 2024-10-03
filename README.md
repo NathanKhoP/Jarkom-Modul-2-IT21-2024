@@ -1973,11 +1973,14 @@ mv ./lb/worker/index.php /var/www/html/index.php
 rm -rf ./lb
 rm lb.zip
 
-curl -L -o worker2.zip 'https://drive.google.com/uc?export=download&id=1JGk8b-tZgzAOnDqTx5B3F9qN6AyNs7Zy' -k
+curl -L -o worker2.zip 'https://docs.google.com/uc?export=download&id=1JGk8b-tZgzAOnDqTx5B3F9qN6AyNs7Zy' -k
 unzip worker2.zip -d worker2
 
 mkdir /var/www/html/resources
 mv worker2/* /var/www/html/resources
+
+rm -rf ./worker2
+rm worker2.zip
 
 echo 'server {
     listen 8082; # interchangable, use 8083+ for other nodes
@@ -2012,12 +2015,13 @@ server {
     index index.php index.html index.htm;
 
     location /resources {
-        alias /var/www/html/resources/worker2;
+        alias /var/www/html/resources/dirlisting/;
         autoindex on;
     }
 
-    error_log /var/log/nginx/jarkom-it21_error.log;
-    access_log /var/log/nginx/jarkom-it21_access.log;
+
+    error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
 }' > /etc/nginx/sites-available/it21
 
 ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
@@ -2167,7 +2171,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      sekianterimakasih.it21.com.
-@       IN      A       10.69.4.2
+@       IN      A       10.74.2.4
 www     IN      CNAME   sekianterimakasih.it21.com. ' > /etc/bind/jarkom/sekianterimakasih.it21.com
 
 echo 'options {
