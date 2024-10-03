@@ -1586,7 +1586,7 @@ server {
   }
 }' > /etc/nginx/sites-available/it21
 
-ln -s /etc/nginx/sites-available/it02 /etc/nginx/sites-enabled
+ln -s /etc/nginx/sites-available/it21 /etc/nginx/sites-enabled
 rm /etc/nginx/sites-enabled/default
 
 service nginx restart
@@ -1614,6 +1614,126 @@ Meme terbaik kalian (terserah ( ͡° ͜ʖ ͡°)) 🤓
 Karena dirasa kurang aman dari brainrot karena masih memakai IP, markas ingin akses ke Solok memakai solok.xxxx.com dengan alias www.solok.xxxx.com (sesuai web server terbaik hasil analisis kalian).
 
 **Pengerjaan**
+
+**Shell script - `master.sh`  (Sriwijaya)**
+
+```bash
+echo 'zone "sudarsana.it21.com" {
+	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+	file "/etc/bind/jarkom/sudarsana.it21.com";
+};
+
+zone "pasopati.it21.com" {
+ 	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+ 	file "/etc/bind/jarkom/pasopati.it21.com"; 
+};
+
+zone "rujapala.it21.com" {
+ 	type master;
+    notify yes;
+    also-notify { 10.74.1.2; }; // IP Majapahit
+    allow-transfer { 10.74.1.2; }; // IP Majapahit
+ 	file "/etc/bind/jarkom/rujapala.it21.com"; 
+};
+
+zone "2.74.10.in-addr.arpa" {
+	type master;
+	file "/etc/bind/jarkom/2.74.10.in-addr.arpa";
+};
+
+zone "solok.it21.com" {
+    type master;
+    file "/etc/bind/it07/solok.it07.com";
+};' > /etc/bind/named.conf.local
+
+mkdir -p /etc/bind/jarkom
+cp /etc/bind/db.local /etc/bind/jarkom/sudarsana.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/pasopati.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/rujapala.it21.com
+cp /etc/bind/db.local /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo ';
+; BIND data file for local loopback interface
+;
+
+$TTL    604800
+@       IN      SOA     sudarsana.it21.com. root.sudarsana.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      sudarsana.it21.com.
+@       IN      A       10.74.2.2		; IP solok
+cakra   IN      A       10.74.2.7   ; IP Bedahulu
+www     IN      CNAME   sudarsana.it21.com.' >  /etc/bind/jarkom/sudarsana.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      pasopati.it21.com.
+@       IN      A       10.74.2.4		; IP kotalingga
+www     IN      CNAME   pasopati.it21.com.
+ns1       IN      A       10.74.1.2		; IP majapahit
+panah     IN      NS      ns1' >  /etc/bind/jarkom/pasopati.it21.com
+
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     rujapala.it21.com. root.rujapala.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      rujapala.it21.com.
+@       IN      A       10.74.2.6		; IP tanjungkulai
+www     IN      CNAME   rujapala.it21.com.' >  /etc/bind/jarkom/rujapala.it21.com
+
+echo ';
+; BIND data file for reverse DNS lookup
+;
+$TTL    604800
+@       IN      SOA     pasopati.it21.com. root.pasopati.it21.com. (
+                              2         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;	
+@       IN      NS      pasopati.it21.com.
+ns1     IN      A       10.74.2.4       ; IP Kotalingga
+panah   IN      NS      ns1
+4       IN      PTR     pasopati.it21.com.' >  /etc/bind/jarkom/2.74.10.in-addr.arpa
+
+echo 'options {
+        directory "/var/cache/bind";
+        // dnssec-validation auto;
+        allow-query{any;};
+
+        auth-nxdomain no;    # conform to RFC1035
+        listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
 
 ### No 17
 
