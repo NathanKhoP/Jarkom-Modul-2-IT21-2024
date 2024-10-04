@@ -441,6 +441,8 @@ service bind9 restart
 
 Pastikan domain-domain tersebut dapat diakses oleh seluruh komputer (client) yang berada di Nusantara.
 
+**Pengerjaan**
+
 Bisa dilakukan cek di setiap client menggunakan command-command berikut:
 
 ```bash
@@ -455,8 +457,6 @@ ping www.rujapala.it21.com -c 1
 Tes di Mulawarman - **Berhasil**
 
 ![alt text](assets/no5.png)
-
-**Pengerjaan**
 
 ### No 6
 
@@ -915,6 +915,7 @@ panah     IN      NS      ns1
 
 Edit `/etc/bind/named.conf.options` di **Sriwijaya** dan **Majapahit**:
 
+```
 options {
         directory "/var/cache/bind";
         // dnssec-validation auto;
@@ -923,7 +924,7 @@ options {
         auth-nxdomain no;    # conform to RFC1035
         listen-on-v6 { any; };
 };
-
+```
 
 **Shell script - `master.sh`  (Sriwijaya)**
 
@@ -1491,12 +1492,16 @@ service apache2 restart
 ```
 
 Testing - `lynx 10.74.2.4:8080/index.php`
-![alt text](assets/no13-1.png)
-Testing - `lynx 10.74.2.6:8080/index.php`
-![alt text](assets/no13-2.png)
-Testing - `lynx 10.74.2.7:8080/index.php`
-![alt text](assets/no13-3.png)
 
+![alt text](assets/no13-1.png)
+
+Testing - `lynx 10.74.2.6:8080/index.php`
+
+![alt text](assets/no13-2.png)
+
+Testing - `lynx 10.74.2.7:8080/index.php`
+
+![alt text](assets/no13-3.png)
 
 ### No 14
 
@@ -1594,10 +1599,16 @@ service nginx restart
 ```
 
 Testing - `lynx 10.74.2.4:8082/index.php`
+
 ![alt text](assets/no14-1.png)
+
 Testing - `lynx 10.74.2.6:8083/index.php`
+
 ![alt text](assets/no14-2.png)
+
 Testing - `lynx 10.74.2.7:8084/index.php`
+
+![alt text](assets/no14-3.png)
 
 ### No 15
 
@@ -2009,10 +2020,9 @@ server {
     index index.php index.html index.htm;
 
     location /resources {
-        alias /var/www/html/resources/dirlisting/;
         autoindex on;
+        autoindex_exact_size off; # revisi
     }
-
 
     error_log /var/log/nginx/error.log;
     access_log /var/log/nginx/access.log;
@@ -2185,3 +2195,7 @@ echo 'options {
 
 service bind9 restart
 ```
+
+**𝓯𝓲𝓷 :heart:** (astaga cuma masalah alias AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA)
+
+![alt text](assets/no19_20.png)
