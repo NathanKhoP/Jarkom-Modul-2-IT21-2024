@@ -2,8 +2,8 @@
 
 |Nama  | NRP |
 |--|--|
-| Nathan Kho Pancras | 5027221002 |
-| Muhammad Andrean Rizq Prasetio | 5027221052 |
+| Nathan Kho Pancras | 5027231002 |
+| Muhammad Andrean Rizq Prasetio | 5027231052 |
 
 **Deskripsi** - Sebuah kerajaan besar di Indonesia sedang mengalami pertempuran dengan penjajah. Kerajaan tersebut adalah Sriwijaya. Karena merasa terdesak Sriwijaya meminta bantuan pada Majapahit untuk mempertahankan wilayahnya. Pertempuran besar tersebut berada di Nusantara.
 
